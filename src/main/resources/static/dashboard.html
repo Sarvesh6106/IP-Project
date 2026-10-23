@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — WarehouseHub</title>
+    <meta name="description" content="Warehouse inventory dashboard showing stock alerts, transfers, and branch statistics.">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="dashboard.html" class="brand">
+                📦 WarehouseHub
+                <span class="brand-badge">Multi-Branch</span>
+            </a>
+            <nav>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="management.html" id="nav-management">Management</a>
+                <a href="operations.html">Operations</a>
+                <div id="header-user-info"></div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="dashboard-alert" class="alert"></div>
+
+        <div class="page-header">
+            <div>
+                <div class="eyebrow">Operations overview</div>
+                <h1>WarehouseHub dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <span class="pill subtle">Live status</span>
+                <a href="operations.html" class="btn btn-primary btn-sm">Open operations</a>
+            </div>
+        </div>
+
+        <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+            <symbol id="icon-branches" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M8 9h.01M12 9h.01M16 9h.01" /></symbol>
+            <symbol id="icon-products" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5M12 8v5" /></symbol>
+            <symbol id="icon-alert" viewBox="0 0 24 24"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0ZM12 9v4M12 17h.01" /></symbol>
+            <symbol id="icon-transfers" viewBox="0 0 24 24"><path d="M17 3l4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3" /></symbol>
+            <symbol id="icon-purchases" viewBox="0 0 24 24"><path d="M3 3h2l2.2 12.2a2 2 0 0 0 2 1.7h8.9a2 2 0 0 0 2-1.6L22 8H6M10 21h.01M18 21h.01" /></symbol>
+        </svg>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label"><svg class="metric-icon" aria-hidden="true" focusable="false"><use href="#icon-branches" /></svg><span>Total Branches</span></div>
+                <div class="stat-value" id="stat-branches">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><svg class="metric-icon" aria-hidden="true" focusable="false"><use href="#icon-products" /></svg><span>Total Products</span></div>
+                <div class="stat-value" id="stat-products">—</div>
+            </div>
+            <div class="stat-card alert-stat">
+                <div class="stat-label"><svg class="metric-icon" aria-hidden="true" focusable="false"><use href="#icon-alert" /></svg><span>Low-Stock Alerts</span></div>
+                <div class="stat-value" id="stat-low-stock" style="color: #f59e0b;">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><svg class="metric-icon" aria-hidden="true" focusable="false"><use href="#icon-transfers" /></svg><span>Pending Transfers</span></div>
+                <div class="stat-value" id="stat-transfers" style="color: #3d5af1;">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><svg class="metric-icon" aria-hidden="true" focusable="false"><use href="#icon-purchases" /></svg><span>Pending Purchases</span></div>
+                <div class="stat-value" id="stat-purchases" style="color: #3d5af1;">—</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid dashboard-analytics">
+            <div class="card">
+                <div class="card-title">
+                    <span>Stock movement</span>
+                    <span class="pill subtle">Daily net quantity</span>
+                </div>
+                <div id="movement-chart" class="movement-chart" role="img" aria-label="Daily stock movement chart"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Inventory by branch</span>
+                    <a href="operations.html" class="btn btn-sm btn-secondary">View stock</a>
+                </div>
+                <div id="branch-inventory" class="branch-inventory"></div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid dashboard-details">
+            <div class="card low-stock-card">
+                <div class="card-title">
+                    <span>Low-stock alerts</span>
+                    <a href="operations.html" class="btn btn-sm btn-primary">Go to Operations</a>
+                </div>
+                <p class="text-muted dashboard-description">
+                    Products at or below their configured minimum replenishment threshold.
+                </p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product</th>
+                                <th>Branch</th>
+                                <th>On hand</th>
+                                <th>Minimum</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="low-stock-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted" style="padding: 2rem;">Loading dashboard data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card activity-card">
+                <div class="card-title">
+                    <span>Recent activity</span>
+                    <a href="operations.html" class="btn btn-sm btn-secondary">View all</a>
+                </div>
+                <div id="activity-feed" class="activity-feed"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Multi-Branch Warehouse Inventory Management System &copy; 2026
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", initDashboardPage);
+    </script>
+</body>
+</html>

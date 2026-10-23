@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operations — WarehouseHub</title>
+    <meta name="description" content="Manage stock inventory, transfers between branches, and purchase replenishments.">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="dashboard.html" class="brand">
+                📦 WarehouseHub
+                <span class="brand-badge">Multi-Branch</span>
+            </a>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="management.html" id="nav-management">Management</a>
+                <a href="operations.html" class="active">Operations</a>
+                <div id="header-user-info"></div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="ops-alert" class="alert"></div>
+
+        <div class="card">
+            <div class="tabs">
+                <button type="button" class="tab-btn active" data-tab="tab-stocks">Stock Inventory</button>
+                <button type="button" class="tab-btn" data-tab="tab-transfers">Stock Transfers</button>
+                <button type="button" class="tab-btn" data-tab="tab-history">Movement History</button>
+                <button type="button" class="tab-btn" data-tab="tab-purchases">Purchase Replenishments</button>
+            </div>
+
+            <!-- Stock Inventory Tab -->
+            <div id="tab-stocks" class="tab-content active">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="stock-branch-filter">Filter by Branch:</label>
+                        <select id="stock-branch-filter" class="form-control">
+                            <option value="">All Branches</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-secondary" id="export-inventory-btn">Export Excel</button>
+                        <button type="button" class="btn btn-primary" onclick="openStockModal()">+ Adjust / Add Stock</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Branch</th>
+                                <th>Quantity</th>
+                                <th>Min Threshold</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted" style="padding: 2rem;">Loading stock...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transfers Tab -->
+            <div id="tab-transfers" class="tab-content">
+                <form id="transfer-create-form" class="form-section">
+                    <p id="transfer-form-heading" class="form-section-title">New Stock Transfer Request</p>
+                    <p id="transfer-request-help" class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">Select the sending branch and receiving branch for this transfer.</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tr-source-branch">Source Branch (Sending)</label>
+                            <select id="tr-source-branch" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tr-dest-branch">Destination Branch (Receiving)</label>
+                            <select id="tr-dest-branch" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tr-product">Product</label>
+                            <select id="tr-product" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tr-quantity">Quantity to Transfer</label>
+                            <input type="number" id="tr-quantity" class="form-control" required min="1" value="10">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Submit Transfer Request</button>
+                    </div>
+                </form>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="transfer-branch-filter">Filter by Branch:</label>
+                        <select id="transfer-branch-filter" class="form-control">
+                            <option value="">All Branches</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Req ID</th>
+                                <th>Source Branch</th>
+                                <th>Destination Branch</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Requested By</th>
+                                <th>Workflow Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transfers-table-body">
+                            <tr>
+                                <td colspan="8" class="text-center text-muted" style="padding: 2rem;">Loading transfer requests...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="tab-history" class="tab-content">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="history-branch-filter">Filter by Branch:</label>
+                        <select id="history-branch-filter" class="form-control">
+                            <option value="">All Branches</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>Product</th>
+                                <th>Branch</th>
+                                <th>Movement</th>
+                                <th>Qty Change</th>
+                                <th>Previous Stock</th>
+                                <th>New Stock</th>
+                                <th>Performed By</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <tr>
+                                <td colspan="9" class="text-center text-muted" style="padding: 2rem;">Loading stock movement history...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Purchases Tab -->
+            <div id="tab-purchases" class="tab-content">
+                <form id="purchase-create-form" class="form-section">
+                    <p class="form-section-title">New Purchase / Replenishment Request</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="po-branch">Warehouse Branch</label>
+                            <select id="po-branch" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="po-product">Product to Order</label>
+                            <select id="po-product" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="po-quantity">Requested Quantity</label>
+                            <input type="number" id="po-quantity" class="form-control" required min="1" value="50">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Create Purchase Request</button>
+                    </div>
+                </form>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="purchase-branch-filter">Filter by Branch:</label>
+                        <select id="purchase-branch-filter" class="form-control">
+                            <option value="">All Branches</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PO ID</th>
+                                <th>Branch</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="purchases-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted" style="padding: 2rem;">Loading purchase requests...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Stock Adjust Modal -->
+    <div id="stock-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a;">Adjust Branch Stock</h3>
+                <button type="button" class="modal-close" onclick="closeStockModal()">&times;</button>
+            </div>
+            <form id="stock-update-form">
+                <div class="form-group">
+                    <label for="stock-modal-branch">Warehouse Branch</label>
+                    <select id="stock-modal-branch" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="stock-modal-product">Product</label>
+                    <select id="stock-modal-product" class="form-control" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="stock-modal-quantity">Actual Stock Quantity</label>
+                    <input type="number" id="stock-modal-quantity" class="form-control" required min="0" value="0">
+                </div>
+                <div class="flex-end" style="margin-top: 1.25rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeStockModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        Multi-Branch Warehouse Inventory Management System &copy; 2026
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", initOperationsPage);
+    </script>
+</body>
+</html>

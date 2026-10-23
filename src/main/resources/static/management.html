@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management — WarehouseHub</title>
+    <meta name="description" content="Manage warehouse branches, products, and staff accounts.">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="dashboard.html" class="brand">
+                📦 WarehouseHub
+                <span class="brand-badge">Multi-Branch</span>
+            </a>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="management.html" class="active" id="nav-management">Management</a>
+                <a href="operations.html">Operations</a>
+                <div id="header-user-info"></div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="mgmt-alert" class="alert"></div>
+
+        <div class="card">
+            <div class="tabs">
+                <button type="button" class="tab-btn active" data-tab="tab-branches">Branches</button>
+                <button type="button" class="tab-btn" data-tab="tab-products">Products</button>
+                <button type="button" class="tab-btn" data-tab="tab-staff">Staff Accounts</button>
+            </div>
+
+            <!-- Branches Tab -->
+            <div id="tab-branches" class="tab-content active">
+                <form id="branch-form" class="form-section">
+                    <input type="hidden" id="branch-id">
+                    <p class="form-section-title">Branch Details</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="branch-name">Branch Name</label>
+                            <input type="text" id="branch-name" class="form-control" required placeholder="e.g. North Distribution Center">
+                        </div>
+                        <div class="form-group">
+                            <label for="branch-location">Location / Address</label>
+                            <input type="text" id="branch-location" class="form-control" required placeholder="e.g. Zone 4, Cargo Terminal">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" id="branch-submit-btn" class="btn btn-primary">Add Branch</button>
+                        <button type="button" id="branch-cancel-btn" class="btn btn-secondary" style="display: none;" onclick="resetBranchForm()">Cancel Edit</button>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Branch Name</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="branches-table-body">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted" style="padding: 2rem;">Loading branches...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="tab-products" class="tab-content">
+                <form id="product-form" class="form-section">
+                    <input type="hidden" id="product-id">
+                    <p class="form-section-title">Product Details</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="product-sku">SKU Code</label>
+                            <input type="text" id="product-sku" class="form-control" required placeholder="e.g. PRD-201">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-name">Product Name</label>
+                            <input type="text" id="product-name" class="form-control" required placeholder="e.g. Heavy Duty Pallet Wrap">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-min-stock">Min Stock Threshold</label>
+                            <input type="number" id="product-min-stock" class="form-control" required min="1" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="product-description">Description</label>
+                            <input type="text" id="product-description" class="form-control" placeholder="Product details / specifications">
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" id="product-submit-btn" class="btn btn-primary">Add Product</button>
+                        <button type="button" id="product-cancel-btn" class="btn btn-secondary" style="display: none;" onclick="resetProductForm()">Cancel Edit</button>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Description</th>
+                                <th>Min Threshold</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted" style="padding: 2rem;">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Staff Tab -->
+            <div id="tab-staff" class="tab-content">
+                <form id="staff-form" class="form-section">
+                    <input type="hidden" id="staff-id">
+                    <p class="form-section-title">Staff Account Details</p>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="staff-name">Staff Name</label>
+                            <input type="text" id="staff-name" class="form-control" required placeholder="Full Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-email">Email Address</label>
+                            <input type="email" id="staff-email" class="form-control" required placeholder="user@warehouse.com">
+                        </div>
+                        <div class="form-group" id="staff-password-group">
+                            <label for="staff-password">Initial Password</label>
+                            <input type="password" id="staff-password" class="form-control" required placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-role">Role</label>
+                            <select id="staff-role" class="form-control" required>
+                                <option value="STAFF">STAFF</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="staff-branch">Assigned Branch</label>
+                            <select id="staff-branch" class="form-control">
+                                <option value="">-- None / Head Office --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" id="staff-submit-btn" class="btn btn-primary">Add Staff</button>
+                        <button type="button" id="staff-cancel-btn" class="btn btn-secondary" style="display: none;" onclick="resetStaffForm()">Cancel Edit</button>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Staff Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Assigned Branch</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center text-muted" style="padding: 2rem;">Loading staff...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Multi-Branch Warehouse Inventory Management System &copy; 2026
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", initManagementPage);
+    </script>
+</body>
+</html>

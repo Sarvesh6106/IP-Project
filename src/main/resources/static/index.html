@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarehouseHub — Sign In</title>
+    <meta name="description" content="Sign in to WarehouseHub, your multi-branch inventory management system.">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="brand">
+                📦 WarehouseHub
+                <span class="brand-badge">Multi-Branch</span>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>Welcome back</h1>
+                <p>Sign in to manage your warehouse inventory</p>
+            </div>
+
+            <div id="auth-alert" class="alert"></div>
+
+            <div class="auth-tabs">
+                <button type="button" id="tab-login-btn" class="auth-tab-btn active">Sign In</button>
+            </div>
+
+            <div id="login-form-section">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" class="form-control" required placeholder="admin@warehouse.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" class="form-control" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Sign In</button>
+                </form>
+
+                <div class="auth-hint">
+                    <strong>Default Credentials:</strong><br>
+                    Admin: <code>admin@warehouse.com</code> / <code>admin123</code><br>
+                    Staff: <code>staff@warehouse.com</code> / <code>staff123</code>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Multi-Branch Warehouse Inventory Management System &copy; 2026
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", initIndexPage);
+    </script>
+</body>
+</html>
